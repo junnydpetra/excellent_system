@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataToReactController;
@@ -14,7 +15,7 @@ use App\Http\Controllers\DataToReactController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::get('/consulta-cnpj/{cnpj}', [ClientController::class, 'consultaCNPJ']);
 Route::get('/clients', [DataToReactController::class, 'getClients']);
 Route::get('/products', [DataToReactController::class, 'getProducts']);
 Route::get('/orders', [DataToReactController::class, 'getOrders']);

@@ -10,6 +10,23 @@ use Illuminate\Http\Request;
 
 class DataToReactController extends Controller
 {
+    public function createClient(Request $request)
+    {
+        $request->validate([
+            'razao_social' => 'required|string|max:255',
+            'cnpj_raiz' => 'required|string|max:14',
+            'email' => 'required|email|max:255',
+        ]);
+
+        $client = new ClientModel();
+        $client->cli_company_name = $request->input('razao_social');
+        $client->cli_cnpj = $request->input('cnpj_raiz');
+        $client->cli_email = $request->input('email');
+        $client->save();
+
+        return response()->json(['success' => true, 'message' => 'Cliente cadastrado com sucesso!']);
+    }
+
     public function getClients()
     {
         $clients = ClientModel::all();
@@ -72,14 +89,14 @@ class DataToReactController extends Controller
     public function createOrder(Request $request)
     {
         $request->validate([
-            'client_id' => 'required|exists:tab_clients,cli_id',
+            'ord_client_id_fk' => 'required|exists:tab_clients,cli_id',
             'products' => 'required|array',
             'products.*.id' => 'required|exists:tab_products,pro_id',
             'products.*.quantity' => 'required|integer|min:1',
         ]);
 
         $order = new OrderModel();
-        $order->ord_client_id_fk = $request->client_id;
+        $order->ord_client_id_fk = $request->input('ord_client_id_fk');
         $order->save();
 
         foreach ($request->products as $product) {
